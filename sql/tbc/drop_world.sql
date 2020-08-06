@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS `tbc_world`;
+
+CREATE DATABASE `tbc_world` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
