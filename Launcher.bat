@@ -246,10 +246,12 @@ if "%choose_exp%"=="3" goto install_module_vanilla
 if "%choose_exp%"=="4" goto install_module_vanilla
 
 :install_module_vanilla
+ping -n 1 https://gofile.io/d/N8SwRk>nul
 "%mainfolder%\Server\Tools\wget.exe" -c https://srv-file10.gofile.io/download/N8SwRk/vanilla.7z -P "%mainfolder%\Modules"
 goto check_modules
 
 :install_module_tbc
+ping -n 1 https://gofile.io/d/N8SwRk>nul
 "%mainfolder%\Server\Tools\wget.exe" -c https://srv-file10.gofile.io/download/N8SwRk/tbc.7z -P "%mainfolder%\Modules"
 goto check_modules
 

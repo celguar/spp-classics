@@ -4,7 +4,7 @@ SET NAME=SPP Server Launcher
 TITLE %NAME%
 set mainfolder=%CD%
 
-if NOT exist "%mainfolder%\launcher.bat" goto not_installed
+if NOT exist "%mainfolder%\SPP_Server\launcher.bat" goto not_installed
 :start_server
 cd "%mainfolder%\SPP_Server"
 Launcher.bat
