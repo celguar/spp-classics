@@ -246,13 +246,19 @@ if "%choose_exp%"=="3" goto install_module_vanilla
 if "%choose_exp%"=="4" goto install_module_vanilla
 
 :install_module_vanilla
+echo.
+echo  Loading Vanilla Module...(~460 MB)
+echo.
 ping -n 1 https://gofile.io/d/N8SwRk>nul
-"%mainfolder%\Server\Tools\wget.exe" -c https://srv-file10.gofile.io/download/N8SwRk/vanilla.7z -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress https://srv-file10.gofile.io/download/N8SwRk/vanilla.7z -P "%mainfolder%\Modules"
 goto check_modules
 
 :install_module_tbc
+echo.
+echo  Loading TBC Module...(~650 MB)
+echo.
 ping -n 1 https://gofile.io/d/N8SwRk>nul
-"%mainfolder%\Server\Tools\wget.exe" -c https://srv-file10.gofile.io/download/N8SwRk/tbc.7z -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress https://srv-file10.gofile.io/download/N8SwRk/tbc.7z -P "%mainfolder%\Modules"
 goto check_modules
 
 :check_modules
@@ -260,7 +266,11 @@ if not exist "%mainfolder%\Modules\%expansion%.7z" goto module_not_found
 cd "%mainfolder%\Modules"
 mkdir %expansion%
 cd %expansion%
-"%mainfolder%\Server\Tools\7za.exe" e -y -spf "%mainfolder%\Modules\%expansion%.7z"
+echo.
+echo  Unpacking %expansion% module...
+echo.
+"%mainfolder%\Server\Tools\7za.exe" e -y -spf "%mainfolder%\Modules\%expansion%.7z" > nul
+echo  Done!
 del "%mainfolder%\Modules\%expansion%.7z"
 cd "%mainfolder%"
 goto update_install
@@ -270,7 +280,8 @@ echo.
 echo  Extracting world database...
 echo.
 cd "%mainfolder%\sql\%expansion%"
-"%mainfolder%\Server\Tools\7za.exe" e -y -spf "%mainfolder%\sql\%expansion%\world.7z"
+"%mainfolder%\Server\Tools\7za.exe" e -y -spf "%mainfolder%\sql\%expansion%\world.7z" > nul
+echo  Done!
 cd "%mainfolder%"
 goto update_install
 
@@ -283,13 +294,12 @@ if not exist "%mainfolder%\sql\%expansion%\world.sql" goto extract_worlddb
 echo.
 echo  Database update required, please wait...
 echo.
-ping -n 20 127.0.0.1>nul
-echo  Applying updated world database...
-echo.
+ping -n 15 127.0.0.1>nul
+echo  Installing updated world database...
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_world.sql"
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < "%mainfolder%\sql\%expansion%\world.sql"
 echo.
-echo  Applying characters database...
+echo  Installing characters database...
 echo.
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_characters.sql"
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_realmd.sql"
@@ -300,7 +310,8 @@ if "%choose_exp%"=="2" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-e
 echo.
 echo  Applying characters updates...
 echo.
-for %%i in ("%mainfolder%\sql\%expansion%\characters\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
+REM for %%i in ("%mainfolder%\sql\%expansion%\characters\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
+for %%i in ("%mainfolder%\sql\%expansion%\characters\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
 echo.
 echo  Applying playerbot updates...
 echo.
@@ -312,9 +323,12 @@ for %%i in ("%mainfolder%\sql\%expansion%\realmd\*sql") do if %%i neq "%mainfold
 echo.
 echo  Applying world updates...
 echo.
-for %%i in ("%mainfolder%\sql\%expansion%\world\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
-for %%i in ("%mainfolder%\sql\%expansion%\world\Instances\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
+REM for %%i in ("%mainfolder%\sql\%expansion%\world\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
+REM for %%i in ("%mainfolder%\sql\%expansion%\world\Instances\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
+for %%i in ("%mainfolder%\sql\%expansion%\world\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
+for %%i in ("%mainfolder%\sql\%expansion%\world\Instances\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
 echo.
+echo  Done!
 echo %spp_update% > "%mainfolder%\%spp_update%.spp"
 goto start_database
 
@@ -327,27 +341,32 @@ echo.
 echo  Extracting world database...
 echo.
 cd "%mainfolder%\sql\%expansion%"
-"%mainfolder%\Server\Tools\7za.exe" e -y -spf "%mainfolder%\sql\%expansion%\world.7z"
+"%mainfolder%\Server\Tools\7za.exe" e -y -spf "%mainfolder%\sql\%expansion%\world.7z" > nul
 cd "%mainfolder%"
 echo.
 echo  Database update required, please wait...
 echo.
 ping -n 15 127.0.0.1>nul
-echo  Applying updated world database...
+echo  Installing updated world database...
 echo.
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_world.sql"
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < "%mainfolder%\sql\%expansion%\world.sql"
 echo.
 echo  Applying characters database updates...
 echo.
-for %%i in ("%mainfolder%\sql\%expansion%\realmd\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < %%i
-for %%i in ("%mainfolder%\sql\%expansion%\characters_updates\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
+REM for %%i in ("%mainfolder%\sql\%expansion%\realmd\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < %%i
+REM for %%i in ("%mainfolder%\sql\%expansion%\characters_updates\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
+for %%i in ("%mainfolder%\sql\%expansion%\realmd\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < %%i
+for %%i in ("%mainfolder%\sql\%expansion%\characters_updates\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
 echo.
 echo  Applying world updates...
 echo.
-for %%i in ("%mainfolder%\sql\%expansion%\world\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
-for %%i in ("%mainfolder%\sql\%expansion%\world\Instances\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
+REM for %%i in ("%mainfolder%\sql\%expansion%\world\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
+REM for %%i in ("%mainfolder%\sql\%expansion%\world\Instances\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
+for %%i in ("%mainfolder%\sql\%expansion%\world\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
+for %%i in ("%mainfolder%\sql\%expansion%\world\Instances\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" if %%i neq "%mainfolder%\sql\%expansion%\world\Instances\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%world% < %%i
 echo.
+echo  Done!
 echo %spp_update% > "%mainfolder%\%world_update%.spp"
 echo.
 goto start_database
@@ -394,12 +413,13 @@ if "%choose_exp%"=="1" echo 6 - Reset randombots
 if "%choose_exp%"=="2" echo 6 - Reset randombots
 echo 7 - Wipe characters, accounts, bots
 echo.
-tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "mangosd.exe">NUL
+tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%worldserver%">NUL
 if NOT "%ERRORLEVEL%"=="0" echo 8 - Back to expansion selector
 echo 0 - Shutdown all servers
 echo.
 set /P menu=Enter a number: 
 REM if "%menu%"=="1" (goto quick_start_servers_x86)
+if "%menu%"=="1" (goto menu)
 if "%menu%"=="2" (goto quick_start_servers_x64)
 if "%menu%"=="3" (goto account_tool)
 if "%menu%"=="4" (goto ip_changer)
@@ -426,8 +446,10 @@ setlocal
 SET /P AREYOUSURE=Are you sure (Y/[N])?
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO menu
 pause
-taskkill /f /im %realmserver%
-taskkill /f /im %worldserver%
+tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%realmserver%">NUL
+if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %realmserver%
+tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%worldserver%">NUL
+if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
 "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\sql\%expansion%\reset_randombots.sql"
 pause
 goto menu
@@ -445,8 +467,10 @@ setlocal
 SET /P AREYOUSURE=Are you sure (Y/[N])?
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO menu
 pause
-taskkill /f /im %realmserver%
-taskkill /f /im %worldserver%
+tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%realmserver%">NUL
+if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %realmserver%
+tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%worldserver%">NUL
+if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_characters.sql"
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_playerbot.sql"
 REM if "%choose_exp%"=="2" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_playerbot.sql"
@@ -811,8 +835,10 @@ goto menu
 
 :shutdown_servers
 cls
-taskkill /f /im %realmserver%
-taskkill /f /im %worldserver%
+tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%realmserver%">NUL
+if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %realmserver%
+tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%worldserver%">NUL
+if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
 if exist %mainfolder%\autosave.on goto autosave_shutdown
 "%mainfolder%\Server\Database\bin\mysqladmin.exe" -u root -p123456 --port=3310 shutdown
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysqladmin.exe" -u root -p123456 --port=3312 shutdown
