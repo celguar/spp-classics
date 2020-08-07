@@ -18,6 +18,7 @@ goto install
 if exist "%mainfolder%\launcher.bat" goto update_process
 cls
 echo Downloading the base files for the repack...
+echo ~ 350 MB...
 echo.
 "%mainfolder%\git\cmd\git.exe" clone --depth=1 https://github.com/celguar/spp-classics.git %installpath% --branch=%branch%
 goto update_process
