@@ -179,8 +179,9 @@ set worldserver=worldserver.exe
 set spp_update=wotlk_base
 
 cls
-echo This expansion is not included yet.
-echo Check back later.
+echo.
+echo  This expansion is not included yet.
+echo  Check back later.
 echo.
 pause
 goto beginning
@@ -236,7 +237,7 @@ goto menu
 
 :module_not_found
 cls
-echo The %expansion% module not found in "Modules" folder.
+echo The %expansion% module not found.
 echo Starting download in 10 seconds...
 ping -n 10 127.0.0.1>nul
 echo.
@@ -413,7 +414,7 @@ if "%choose_exp%"=="1" echo 6 - Reset randombots
 if "%choose_exp%"=="2" echo 6 - Reset randombots
 echo 7 - Wipe characters, accounts, bots
 echo.
-tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%worldserver%">NUL
+tasklist /FI "IMAGENAME eq %worldserver%" 2>NUL | find /I /N "%worldserver%">NUL
 if NOT "%ERRORLEVEL%"=="0" echo 8 - Back to expansion selector
 echo 0 - Shutdown all servers
 echo.
@@ -434,7 +435,7 @@ if "%menu%"=="" (goto menu)
 goto menu
 
 :clear_bots
-mode con: cols=70 lines=30
+mode con: cols=40 lines=30
 cls
 echo ########################################
 echo # WARNING!                             #
@@ -445,17 +446,23 @@ setlocal
 :PROMPT
 SET /P AREYOUSURE=Are you sure (Y/[N])?
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO menu
-pause
-tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%realmserver%">NUL
-if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %realmserver%
-tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%worldserver%">NUL
-if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
+tasklist /FI "IMAGENAME eq %realmserver%" 2>NUL | find /I /N "%realmserver%">NUL
+if "%ERRORLEVEL%"=="0" taskkill /f /im %realmserver%
+tasklist /FI "IMAGENAME eq %worldserver%" 2>NUL | find /I /N "%worldserver%">NUL
+if "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
+echo.
+echo  Reseting random bots...
+echo.
+ping -n 1 127.0.0.1>nul
 "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\sql\%expansion%\reset_randombots.sql"
+echo.
+echo  Done!
+echo.
 pause
 goto menu
 
 :clear_characters
-mode con: cols=70 lines=30
+mode con: cols=40 lines=30
 cls
 echo ########################################
 echo # WARNING!                             #
@@ -466,26 +473,35 @@ setlocal
 :PROMPT
 SET /P AREYOUSURE=Are you sure (Y/[N])?
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO menu
-pause
-tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%realmserver%">NUL
-if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %realmserver%
-tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%worldserver%">NUL
-if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
+tasklist /FI "IMAGENAME eq %realmserver%" 2>NUL | find /I /N "%realmserver%">NUL
+if "%ERRORLEVEL%"=="0" taskkill /f /im %realmserver%
+tasklist /FI "IMAGENAME eq %worldserver%" 2>NUL | find /I /N "%worldserver%">NUL
+if "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
+echo.
+echo  Wiping characters...
+echo.
+ping -n 1 127.0.0.1>nul
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_characters.sql"
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_playerbot.sql"
-REM if "%choose_exp%"=="2" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_playerbot.sql"
-REM "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_realmd.sql"
-
-"%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < "%mainfolder%\sql\%expansion%\characters.sql"
-REM "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < "%mainfolder%\sql\%expansion%\realmd.sql"
-for %%i in ("%mainfolder%\sql\%expansion%\characters\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
-for %%i in ("%mainfolder%\sql\%expansion%\characters_updates\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
-REM for %%i in ("%mainfolder%\sql\%expansion%\realmd\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < %%i
-if "%choose_exp%"=="1" for %%i in ("%mainfolder%\sql\%expansion%\playerbot\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" echo %%i & "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < %%i
-if "%choose_exp%"=="2" for %%i in ("%mainfolder%\sql\%expansion%\playerbot\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" echo %%i & "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < %%i
-
+if "%choose_exp%"=="2" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_playerbot.sql"
+"%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 < "%mainfolder%\sql\%expansion%\drop_realmd.sql"
 echo.
-echo Clear completed.
+echo  Installing character database...
+echo.
+ping -n 1 127.0.0.1>nul
+"%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < "%mainfolder%\sql\%expansion%\characters.sql"
+"%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < "%mainfolder%\sql\%expansion%\realmd.sql"
+echo.
+echo  Applying characters database updates...
+echo.
+ping -n 1 127.0.0.1>nul
+for %%i in ("%mainfolder%\sql\%expansion%\characters\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
+for %%i in ("%mainfolder%\sql\%expansion%\characters_updates\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
+REM for %%i in ("%mainfolder%\sql\%expansion%\realmd\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" echo %%i & "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < %%i
+if "%choose_exp%"=="1" for %%i in ("%mainfolder%\sql\%expansion%\playerbot\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < %%i
+if "%choose_exp%"=="2" for %%i in ("%mainfolder%\sql\%expansion%\playerbot\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" if %%i neq "%mainfolder%\sql\%expansion%\playerbot\*sql" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < %%i
+echo.
+echo   All characters deleted.
 pause
 goto menu
 
@@ -835,10 +851,10 @@ goto menu
 
 :shutdown_servers
 cls
-tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%realmserver%">NUL
-if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %realmserver%
-tasklist /FI "IMAGENAME eq mangosd.exe" 2>NUL | find /I /N "%worldserver%">NUL
-if NOT "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
+tasklist /FI "IMAGENAME eq %realmserver%" 2>NUL | find /I /N "%realmserver%">NUL
+if "%ERRORLEVEL%"=="0" taskkill /f /im %realmserver%
+tasklist /FI "IMAGENAME eq %worldserver%" 2>NUL | find /I /N "%worldserver%">NUL
+if "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
 if exist %mainfolder%\autosave.on goto autosave_shutdown
 "%mainfolder%\Server\Database\bin\mysqladmin.exe" -u root -p123456 --port=3310 shutdown
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysqladmin.exe" -u root -p123456 --port=3312 shutdown
