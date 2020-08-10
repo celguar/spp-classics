@@ -3,8 +3,8 @@ SET NAME=SPP Updater
 TITLE %NAME%
 set mainfolder=%CD%
 
-taskkill /f /im bnetserver.exe
-taskkill /f /im worldserver.exe
+taskkill /f /im realmd.exe
+taskkill /f /im mangosd.exe
 taskkill /f /im spp-httpd.exe
 taskkill /f /im node.exe
 
@@ -26,7 +26,8 @@ exit
 :not_installed_error
 cls
 echo Looks like %name% repack is not installed.
-echo Please use the "Server_Update.bat" to install it first.
+echo Please use "Server_Update.bat" to install it first.
 echo.
+more < "%mainfolder%\Git\robo_logo.txt"
 pause
 goto menu
