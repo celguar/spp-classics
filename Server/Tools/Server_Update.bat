@@ -3,13 +3,13 @@ SET NAME=SingleCore Server Launcher
 TITLE %NAME%
 set mainfolder=%CD%
 
-taskkill /f /im bnetserver.exe
-taskkill /f /im worldserver.exe
+taskkill /f /im realmd.exe
+taskkill /f /im mangosd.exe
 taskkill /f /im spp-httpd.exe
 taskkill /f /im node.exe
 
 :repack
-set name=Single Player Project - Classics Collection
+set name=SPP - Classics Collection
 set installpath=SPP_Server
 set branch=master
 goto install
@@ -17,8 +17,8 @@ goto install
 :install
 if exist "%mainfolder%\launcher.bat" goto update_process
 cls
-echo Downloading the base files for the repack...
-echo ~ 350 MB...
+echo  Downloading the base files for the repack...
+echo  ~ 350 MB...
 echo.
 "%mainfolder%\git\cmd\git.exe" clone --depth=1 https://github.com/celguar/spp-classics.git %installpath% --branch=%branch%
 goto update_process
@@ -42,8 +42,9 @@ echo Downloading the latest %name% update...
 echo.
 ..\git\cmd\git.exe pull https://github.com/celguar/spp-classics.git %branch%
 echo.
-echo Update done!
-echo Please run Update_fix_if_error.bat IF you see merge error above.
+echo  Update complete!
+echo.
+echo  Please run Server_Fix.bat ONLY IF you see merge error above.
 echo.
 ping -n 5 127.0.0.1>nul
 cd "%mainfolder%"

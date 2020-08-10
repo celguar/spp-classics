@@ -12,6 +12,19 @@ taskkill /f /im node.exe
 set name=SPP - Classics Collection
 set installpath=SPP_Server
 set branch=master
+cls
+echo #########################################################
+echo # WARNING!                                              #
+echo # All your changes will be undone, including:           #
+echo # Accounts, characters, bots, settings, db changes!     #
+echo #                                                       #
+echo # Back up settings and characters before doing this!    #
+echo #########################################################
+echo.
+setlocal
+:PROMPT
+SET /P AREYOUSURE=Are you sure (Y/[N])?
+IF /I "%AREYOUSURE%" NEQ "Y" exit
 goto start_restore
 
 :start_restore
