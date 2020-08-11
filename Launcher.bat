@@ -10,9 +10,12 @@ IF NOT EXIST "%mainfolder%\music.on" (
   )
 )
 if exist "%mainfolder%\Server\Database" goto beginning_part2
+echo.
+echo  Preparing for the first launch...
+ping -n 2 127.0.0.1>nul
 cd "%mainfolder%\Server"
-"%mainfolder%\Server\Tools\7za.exe" e -y -spf Database.7z
-"%mainfolder%\Server\Tools\7za.exe" e -y -spf Database_Playerbot.7z
+"%mainfolder%\Server\Tools\7za.exe" e -y -spf Database.7z > nul
+"%mainfolder%\Server\Tools\7za.exe" e -y -spf Database_Playerbot.7z > nul
 cd "%mainfolder%"
 goto beginning
 
@@ -208,7 +211,7 @@ set spp_update=cata_base
 goto settings
 
 :settings
-if exist "%mainfolder%\music.on" start cmdmp3win.exe install_vanilla.mp3
+REM if exist "%mainfolder%\music.on" start cmdmp3win.exe install_vanilla.mp3
 REM --- Settings ---
 
 set host=127.0.0.1
@@ -256,7 +259,7 @@ echo.
 echo  Downloading Vanilla module...(~460 MB)
 echo.
 ping -n 2 https://gofile.io/d/N8SwRk>nul
-"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/sl1a4qecnvs1m8l/vanilla.7z?dl=0 -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/sl1a4qecnvs1m8l/vanilla.7z -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
 ping -n 3 127.0.0.1>nul
@@ -268,7 +271,7 @@ echo.
 echo  Downloading TBC module...(~650 MB)
 echo.
 ping -n 2 https://gofile.io/d/N8SwRk>nul
-"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/2dg73jhe116rgmr/tbc.7z?dl=0 -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/2dg73jhe116rgmr/tbc.7z -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
 ping -n 3 127.0.0.1>nul

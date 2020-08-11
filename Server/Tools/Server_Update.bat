@@ -17,6 +17,7 @@ goto install
 :install
 if exist "%mainfolder%\launcher.bat" goto update_process
 cls
+echo.
 echo  Downloading the base files for the repack...
 echo  ~ 350 MB...
 echo.
@@ -38,7 +39,7 @@ echo.
 ..\git\cmd\git.exe commit -m "Custom Changes"
 cls
 echo.
-echo Downloading the latest %name% update...
+echo  Downloading the latest %name% update...
 echo.
 ..\git\cmd\git.exe pull https://github.com/celguar/spp-classics.git %branch%
 echo.
