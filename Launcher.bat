@@ -567,6 +567,7 @@ cls
 set serverstartoption=1
 set /p realmname1=<"%mainfolder%\Settings\%expansion%\name.txt
 
+echo.
 echo  Starting the first realm...
 echo.
 echo  %realmname1%
@@ -580,6 +581,7 @@ cls
 set serverstartoption=2
 set /p realmname1=<"%mainfolder%\Settings\%expansion%\name.txt
 
+echo.
 echo  Starting the first realm...
 echo.
 echo  %realmname1%
@@ -602,23 +604,28 @@ echo           # Autosave is on! #
 echo ########################################
 echo.
 echo  Exporting accounts...please wait...
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 "%mainfolder%\Server\Database\bin\mysqldump.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 %login% > "%mainfolder%\Saves\%expansion%\%saveslot%\realmd.sql"
+echo.
 echo  Done!
 echo.
+ping -n 1 127.0.0.1>nul
 echo  Exporting characters...please wait...
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 "%mainfolder%\Server\Database\bin\mysqldump.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 %characters% > "%mainfolder%\Saves\%expansion%\%saveslot%\characters.sql"
+echo.
 echo  Done!
 echo.
+ping -n 1 127.0.0.1>nul
 if "%choose_exp%"=="1" echo  Exporting playerbots...please wait...
 if "%choose_exp%"=="2" echo  Exporting playerbots...please wait...
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysqldump.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 %playerbot% > "%mainfolder%\Saves\%expansion%\%saveslot%\playerbot.sql"
 if "%choose_exp%"=="2" "%mainfolder%\Server\Database_Playerbot\bin\mysqldump.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 %playerbot% > "%mainfolder%\Saves\%expansion%\%saveslot%\playerbot.sql"
+echo.
 echo  Done!
 echo.
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 if "%serverstartoption%"=="1" (goto server_x86)
 if "%serverstartoption%"=="2" (goto server_x64)
 
@@ -927,29 +934,29 @@ echo ########################################
 echo.
 echo  Exporting accounts...please wait...
 "%mainfolder%\Server\Database\bin\mysqldump.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 %login% > "%mainfolder%\Saves\%expansion%\%saveslot%\realmd.sql"
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 echo.
 echo  Done!
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 echo.
 echo  Exporting characters...please wait...
 "%mainfolder%\Server\Database\bin\mysqldump.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 %characters% > "%mainfolder%\Saves\%expansion%\%saveslot%\characters.sql"
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 echo.
 echo  Done!
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 echo.
 if "%choose_exp%"=="1" echo  Exporting playerbots...please wait...
 if "%choose_exp%"=="2" echo  Exporting playerbots...please wait...
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysqldump.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 %playerbot% > "%mainfolder%\Saves\%expansion%\%saveslot%\playerbot.sql"
 if "%choose_exp%"=="2" "%mainfolder%\Server\Database_Playerbot\bin\mysqldump.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 %playerbot% > "%mainfolder%\Saves\%expansion%\%saveslot%\playerbot.sql"
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 echo.
 echo  Done!
 echo.
-ping -n 2 127.0.0.1>nul
+ping -n 1 127.0.0.1>nul
 echo  Shutting down...
-ping -n 3 127.0.0.1>nul
+ping -n 2 127.0.0.1>nul
 "%mainfolder%\Server\Database\bin\mysqladmin.exe" -u root -p123456 --port=3310 shutdown
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysqladmin.exe" -u root -p123456 --port=3312 shutdown
 if "%choose_exp%"=="2" "%mainfolder%\Server\Database_Playerbot\bin\mysqladmin.exe" -u root -p123456 --port=3312 shutdown
