@@ -10,6 +10,7 @@ IF NOT EXIST "%mainfolder%\music.on" (
   )
 )
 if exist "%mainfolder%\Server\Database" goto beginning_part2
+cls
 echo.
 echo  Preparing for the first launch...
 ping -n 2 127.0.0.1>nul

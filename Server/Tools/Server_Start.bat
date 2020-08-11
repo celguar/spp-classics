@@ -14,7 +14,7 @@ exit
 echo.
 echo  %NAME% is not installed
 echo.
-echo  Please run Server_Update.bat to install.
+echo  Please run Server_Update.bat to install
 more < "%mainfolder%\Git\robo_logo.txt"
 echo.
 pause
