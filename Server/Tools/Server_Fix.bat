@@ -16,9 +16,9 @@ cls
 echo #########################################################
 echo # WARNING!                                              #
 echo # All your changes will be undone, including:           #
-echo # Accounts, characters, bots, settings, db changes!     #
+echo # Server settings                                       #
 echo #                                                       #
-echo # Back up settings and characters before doing this!    #
+echo # Back up settings before doing this!                   #
 echo #########################################################
 echo.
 setlocal
