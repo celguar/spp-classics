@@ -256,7 +256,7 @@ echo.
 echo  Downloading Vanilla module...(~460 MB)
 echo.
 ping -n 2 https://gofile.io/d/N8SwRk>nul
-"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress https://srv-file10.gofile.io/download/N8SwRk/vanilla.7z -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/sl1a4qecnvs1m8l/vanilla.7z?dl=0 -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
 ping -n 3 127.0.0.1>nul
@@ -268,7 +268,7 @@ echo.
 echo  Downloading TBC module...(~650 MB)
 echo.
 ping -n 2 https://gofile.io/d/N8SwRk>nul
-"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress https://srv-file10.gofile.io/download/N8SwRk/tbc.7z -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/2dg73jhe116rgmr/tbc.7z?dl=0 -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
 ping -n 3 127.0.0.1>nul
