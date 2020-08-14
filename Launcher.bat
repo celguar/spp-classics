@@ -259,7 +259,6 @@ mode con: cols=80 lines=30
 echo.
 echo  Downloading Vanilla module...(~460 MB)
 echo.
-ping -n 2 https://gofile.io/d/N8SwRk>nul
 "%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/sl1a4qecnvs1m8l/vanilla.7z -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
@@ -271,7 +270,6 @@ mode con: cols=80 lines=30
 echo.
 echo  Downloading TBC module...(~650 MB)
 echo.
-ping -n 2 https://gofile.io/d/N8SwRk>nul
 "%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/2dg73jhe116rgmr/tbc.7z -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
