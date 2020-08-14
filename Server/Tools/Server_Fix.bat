@@ -13,18 +13,18 @@ set name=SPP - Classics Collection
 set installpath=SPP_Server
 set branch=master
 cls
-echo #########################################################
-echo # WARNING!                                              #
-echo # All your changes will be undone, including:           #
-echo # Server settings                                       #
-echo #                                                       #
-echo # Back up settings before doing this!                   #
-echo #########################################################
-echo.
-setlocal
-:PROMPT
-SET /P AREYOUSURE=Are you sure (Y/[N])?
-IF /I "%AREYOUSURE%" NEQ "Y" exit
+REM echo #########################################################
+REM echo # WARNING!                                              #
+REM echo # All your changes will be undone, including:           #
+REM echo # Server settings                                       #
+REM echo #                                                       #
+REM echo # Back up settings before doing this!                   #
+REM echo #########################################################
+REM echo.
+REM setlocal
+REM :PROMPT
+REM SET /P AREYOUSURE=Are you sure (Y/[N])?
+REM IF /I "%AREYOUSURE%" NEQ "Y" exit
 goto start_restore
 
 :start_restore
