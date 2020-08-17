@@ -408,6 +408,8 @@ if not exist "%mainfolder%\Saves\%expansion%\6" mkdir "%mainfolder%\Saves\%expan
 if not exist "%mainfolder%\Saves\%expansion%\7" mkdir "%mainfolder%\Saves\%expansion%\7"
 if not exist "%mainfolder%\Saves\%expansion%\8" mkdir "%mainfolder%\Saves\%expansion%\8"
 if not exist "%mainfolder%\Saves\%expansion%\9" mkdir "%mainfolder%\Saves\%expansion%\9"
+if not exist "%mainfolder%\Saves\%expansion%\old" mkdir "%mainfolder%\Saves\%expansion%\old"
+REM if not exist "%mainfolder%\Saves\%expansion%\transfer" mkdir "%mainfolder%\Saves\%expansion%\transfer"
 cls
 echo ########################################
 echo # %NAME%
@@ -674,6 +676,8 @@ set customname6=Empty slot
 set customname7=Empty slot
 set customname8=Empty slot
 set customname9=Empty slot
+set customnameold=Old Save
+REM set customnametransfer=Cmangos Save
 
 if exist "%mainfolder%\Saves\%expansion%\1\name.txt" set /p customname1=<"%mainfolder%\Saves\%expansion%\1\name.txt"
 if exist "%mainfolder%\Saves\%expansion%\2\name.txt" set /p customname2=<"%mainfolder%\Saves\%expansion%\2\name.txt"
@@ -684,6 +688,8 @@ if exist "%mainfolder%\Saves\%expansion%\6\name.txt" set /p customname6=<"%mainf
 if exist "%mainfolder%\Saves\%expansion%\7\name.txt" set /p customname7=<"%mainfolder%\Saves\%expansion%\7\name.txt"
 if exist "%mainfolder%\Saves\%expansion%\8\name.txt" set /p customname8=<"%mainfolder%\Saves\%expansion%\8\name.txt"
 if exist "%mainfolder%\Saves\%expansion%\9\name.txt" set /p customname9=<"%mainfolder%\Saves\%expansion%\9\name.txt"
+if exist "%mainfolder%\Saves\%expansion%\old\name.txt" set /p customnameold=<"%mainfolder%\Saves\%expansion%\old\name.txt"
+REM if exist "%mainfolder%\Saves\%expansion%\transfer\name.txt" set /p customnametrans=<"%mainfolder%\Saves\%expansion%\transfer\name.txt"
 
 echo.
 echo  SPP Save Manager.
@@ -703,6 +709,12 @@ echo  Save 7  -  [%customname7%]
 echo  Save 8  -  [%customname8%]
 echo  Save 9  -  [%customname9%]
 echo  Save 10 -  [Autosave]
+if exist "%mainfolder%\Saves\%expansion%\old\name.txt" echo.
+if exist "%mainfolder%\Saves\%expansion%\old\name.txt" echo  --------Old Save-------
+if exist "%mainfolder%\Saves\%expansion%\old\name.txt" echo  Save 11 -  [%customnameold%]
+REM if exist "%mainfolder%\Saves\%expansion%\transfer\name.txt" echo.
+REM if exist "%mainfolder%\Saves\%expansion%\transfer\name.txt" echo  ------CMangos Save-----
+REM if exist "%mainfolder%\Saves\%expansion%\transfer\name.txt" echo  Save 12 -  [%customnametrans%]
 echo  -----------------------
 echo.
 echo  1 - Save
@@ -737,6 +749,8 @@ if "%saveslot%"=="7" (set saveslot=7)
 if "%saveslot%"=="8" (set saveslot=8)
 if "%saveslot%"=="9" (set saveslot=9)
 if "%saveslot%"=="10" (set saveslot=autosave)
+if "%saveslot%"=="11" (set saveslot=old)
+REM if "%saveslot%"=="12" (set saveslot=transfer)
 if "%saveslot%"=="" (goto save_menu)
 
 if "%savemenu%"=="1" (goto export_char_check)
@@ -774,8 +788,19 @@ echo.
 ping -n 3 127.0.0.1>nul
 goto save_menu
 
+:export_notransfer
+cls
+echo.
+if "%saveslot%"=="transfer" echo  Transfer slot is for import only...
+if "%saveslot%"=="old" echo  Old SPP slot is for import only...
+echo.
+ping -n 3 127.0.0.1>nul
+goto save_menu
+
 :export_char_check
 cls
+if "%saveslot%"=="transfer" goto export_notransfer
+if "%saveslot%"=="old" goto export_notransfer
 if exist "%mainfolder%\Saves\%expansion%\%saveslot%\characters.sql" goto export_char
 goto export_char_1
 
@@ -847,40 +872,71 @@ set /P menu=Are you sure want to do this? (Y/n)
 if "%menu%"=="n" (goto menu)
 if "%menu%"=="y" (goto import_char_1)
 
+:convert_old_data
+echo  Converting accounts...
+"%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < "%mainfolder%\sql\%expansion%\convert_realmd.sql"
+ping -n 2 127.0.0.1>nul
+REM echo.
+REM echo  Done!
+ping -n 2 127.0.0.1>nul
+echo.
+echo  Converting characters...
+"%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < "%mainfolder%\sql\%expansion%\convert_characters.sql"
+ping -n 2 127.0.0.1>nul
+REM echo.
+REM echo  Done!
+ping -n 2 127.0.0.1>nul
+echo.
+"%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < "%mainfolder%\sql\%expansion%\realmlist.sql"
+echo  Updating realmlist...
+ping -n 2 127.0.0.1>nul
+echo.
+if "%saveslot%"=="old" goto import_playerbots
+if "%saveslot%"=="transfer" goto import_continue
+
 :import_char_1
 cls
 echo.
-echo  Importing accounts...please wait...
+echo  Importing accounts...
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < "%mainfolder%\Saves\%expansion%\%saveslot%\realmd.sql"
 ping -n 2 127.0.0.1>nul
-echo.
-echo  Done!
+REM echo.
+REM echo  Done!
 echo.
 ping -n 2 127.0.0.1>nul
-echo  Importing characters...please wait...
+echo  Importing characters...
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < "%mainfolder%\Saves\%expansion%\%saveslot%\characters.sql"
 ping -n 2 127.0.0.1>nul
-echo.
-echo Done!
+REM echo.
+REM echo  Done!
 ping -n 2 127.0.0.1>nul
 echo.
-if "%choose_exp%"=="1" echo  Importing playerbots...please wait...
-if "%choose_exp%"=="2" echo  Importing playerbots...please wait...
+if "%saveslot%"=="old" goto convert_old_data
+if "%saveslot%"=="transfer" goto convert_old_data
+:import_playerbots
+if "%choose_exp%"=="1" echo  Importing playerbots...
+if "%choose_exp%"=="2" echo  Importing playerbots...
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\Saves\%expansion%\%saveslot%\playerbot.sql"
 if "%choose_exp%"=="2" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\Saves\%expansion%\%saveslot%\playerbot.sql"
 ping -n 2 127.0.0.1>nul
 echo.
-if "%choose_exp%"=="1" echo  Done!
-if "%choose_exp%"=="2" echo  Done!
+echo. Converting playerbots...
+if "%saveslot%"=="old" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\sql\%expansion%\playerbot\characters_ai_playerbot_equip_cache.sql"
+if "%saveslot%"=="old" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\sql\%expansion%\playerbot\characters_ai_playerbot_rarity_cache.sql"
+if "%saveslot%"=="old" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\sql\%expansion%\playerbot\characters_ai_playerbot_rnditem_cache.sql"
+if "%saveslot%"=="old" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\sql\%expansion%\playerbot\characters_ai_playerbot_tele_cache.sql"
 ping -n 2 127.0.0.1>nul
 echo.
-echo  Importing characters updates...please wait...
+REM if "%choose_exp%"=="1" echo  Done!
+REM if "%choose_exp%"=="2" echo  Done!
+ping -n 2 127.0.0.1>nul
+:import_continue
+echo  Importing characters updates...
 echo.
 for %%i in ("%mainfolder%\sql\%expansion%\realmd\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" if %%i neq "%mainfolder%\sql\%expansion%\realmd\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < %%i
 for %%i in ("%mainfolder%\sql\%expansion%\characters\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
 for %%i in ("%mainfolder%\sql\%expansion%\characters_updates\*sql") do if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" if %%i neq "%mainfolder%\sql\%expansion%\characters_updates\*sql" "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%characters% < %%i
 ping -n 2 127.0.0.1>nul
-echo.
 echo  Done!
 ping -n 3 127.0.0.1>nul
 echo.
