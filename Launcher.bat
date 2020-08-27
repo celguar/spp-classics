@@ -461,7 +461,7 @@ mode con: cols=40 lines=30
 cls
 echo ########################################
 echo # WARNING!                             #
-echo # All random bots will be deleted!     #
+echo # All random bots will be reset!     #
 echo ########################################
 echo.
 setlocal
