@@ -259,7 +259,7 @@ mode con: cols=80 lines=30
 echo.
 echo  Downloading Vanilla module...(~460 MB)
 echo.
-"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/sl1a4qecnvs1m8l/vanilla.7z -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress ftp://173.212.202.173/uploads/spp_classics_data/vanilla.7z -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
 ping -n 3 127.0.0.1>nul
@@ -270,7 +270,7 @@ mode con: cols=80 lines=30
 echo.
 echo  Downloading TBC module...(~650 MB)
 echo.
-"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress http://dl.dropboxusercontent.com/s/2dg73jhe116rgmr/tbc.7z -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress ftp://173.212.202.173/uploads/spp_classics_data/tbc.7z -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
 ping -n 3 127.0.0.1>nul
@@ -552,6 +552,7 @@ ping -n 2 127.0.0.1>nul
 "%mainfolder%\Server\Database\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database\connection.cnf" --default-character-set=utf8 --database=%login% < "%mainfolder%\sql\%expansion%\realmlist.sql"
 echo.
 echo  Address changed to: %setip%
+echo.
 pause
 goto menu
 
@@ -919,8 +920,8 @@ if "%choose_exp%"=="2" echo  Importing playerbots...
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\Saves\%expansion%\%saveslot%\playerbot.sql"
 if "%choose_exp%"=="2" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\Saves\%expansion%\%saveslot%\playerbot.sql"
 ping -n 2 127.0.0.1>nul
-echo.
-echo. Converting playerbots...
+if "%saveslot%"=="old" echo.
+if "%saveslot%"=="old" echo. Converting playerbots...
 if "%saveslot%"=="old" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\sql\%expansion%\playerbot\characters_ai_playerbot_equip_cache.sql"
 if "%saveslot%"=="old" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\sql\%expansion%\playerbot\characters_ai_playerbot_rarity_cache.sql"
 if "%saveslot%"=="old" "%mainfolder%\Server\Database_Playerbot\bin\mysql.exe" --defaults-extra-file="%mainfolder%\Server\Database_Playerbot\connection.cnf" --default-character-set=utf8 --database=%playerbot% < "%mainfolder%\sql\%expansion%\playerbot\characters_ai_playerbot_rnditem_cache.sql"
