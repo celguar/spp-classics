@@ -595,7 +595,7 @@ ping -n 5 127.0.0.1>nul
 goto check_autosave_start
 
 :check_autosave_start
-if exist %mainfolder%\autosave.on goto autosave_start
+if exist "%mainfolder%\autosave.on" goto autosave_start
 if "%serverstartoption%"=="1" (goto server_x86)
 if "%serverstartoption%"=="2" (goto server_x64)
 goto menu
@@ -977,7 +977,7 @@ if "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
 tasklist /FI "IMAGENAME eq cmdmp3win.exe" 2>NUL | find /I /N "cmdmp3win.exe">NUL
 if "%ERRORLEVEL%"=="0" taskkill /f /im cmdmp3win.exe
 cls
-if exist %mainfolder%\autosave.on goto autosave_shutdown
+if exist "%mainfolder%\autosave.on" goto autosave_shutdown
 "%mainfolder%\Server\Database\bin\mysqladmin.exe" -u root -p123456 --port=3310 shutdown
 if "%choose_exp%"=="1" "%mainfolder%\Server\Database_Playerbot\bin\mysqladmin.exe" -u root -p123456 --port=3312 shutdown
 if "%choose_exp%"=="2" "%mainfolder%\Server\Database_Playerbot\bin\mysqladmin.exe" -u root -p123456 --port=3312 shutdown
