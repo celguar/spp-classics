@@ -652,7 +652,7 @@ cd "%mainfolder%\Settings\%expansion%"
 if "%menu%"=="1" (Start ..\..\Server\Binaries\%expansion%\Bin\%worldserver%)
 tasklist /FI "IMAGENAME eq %realmserver%" 2>NUL | find /I /N "%realmserver%">NUL
 if "%ERRORLEVEL%"=="0" goto menu
-start ..\..\Server\Binaries\%expansion%\Bin\%realmserver%
+start /min ..\..\Server\Binaries\%expansion%\Bin\%realmserver%
 REM start Server\Tools\server_check.bat"
 goto menu
 
@@ -661,7 +661,7 @@ cd "%mainfolder%\Settings\%expansion%"
 if "%menu%"=="2" (Start ..\..\Server\Binaries\%expansion%\Bin64\%worldserver%)
 tasklist /FI "IMAGENAME eq %realmserver%" 2>NUL | find /I /N "%realmserver%">NUL
 if "%ERRORLEVEL%"=="0" goto menu
-start ..\..\Server\Binaries\%expansion%\Bin64\%realmserver%
+start /min ..\..\Server\Binaries\%expansion%\Bin64\%realmserver%
 REM start Server\Tools\server_check.bat"
 goto menu
 
