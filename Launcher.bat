@@ -259,7 +259,7 @@ mode con: cols=80 lines=30
 echo.
 echo  Downloading Vanilla module...(~460 MB)
 echo.
-"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress ftp://173.212.202.173/uploads/spp_classics_data/vanilla.7z -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress ftp://161.97.113.128:9876/spp_classics_data/vanilla.7z -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
 ping -n 3 127.0.0.1>nul
@@ -270,7 +270,7 @@ mode con: cols=80 lines=30
 echo.
 echo  Downloading TBC module...(~650 MB)
 echo.
-"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress ftp://173.212.202.173/uploads/spp_classics_data/tbc.7z -P "%mainfolder%\Modules"
+"%mainfolder%\Server\Tools\wget.exe" -c -q --show-progress ftp://161.97.113.128:9876/spp_classics_data/tbc.7z -P "%mainfolder%\Modules"
 echo.
 echo  Download complete. Checking file...
 ping -n 3 127.0.0.1>nul
