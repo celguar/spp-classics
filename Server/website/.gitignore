@@ -1,7 +1,7 @@
 #AZTH
 
 # exclude everything ...
-/config/playermap_config.php
+#/config/playermap_config.php
 
 #
 # OS specific
