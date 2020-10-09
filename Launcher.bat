@@ -9,6 +9,14 @@ IF NOT EXIST "%mainfolder%\music.on" (
     echo music > "%mainfolder%\music.on"
   )
 )
+
+IF NOT EXIST "%mainfolder%\website.on" (
+  IF NOT EXIST "%mainfolder%\website.off" (
+    echo music > "%mainfolder%\website.on"
+  )
+)
+
+if not exist "%mainfolder%\Server\Tools\Apache24" goto install_website
 if exist "%mainfolder%\Server\Database" goto beginning_part2
 cls
 echo.
@@ -18,6 +26,20 @@ cd "%mainfolder%\Server"
 "%mainfolder%\Server\Tools\7za.exe" e -y -spf Database.7z > nul
 "%mainfolder%\Server\Tools\7za.exe" e -y -spf Database_Playerbot.7z > nul
 cd "%mainfolder%"
+goto beginning
+
+:install_website
+echo.
+echo  Extracting Webserver...
+echo.
+ping -n 2 127.0.0.1>nul
+echo  Please, wait...
+echo.
+cd "%mainfolder%\Server\Tools"
+"%mainfolder%\Server\Tools\7za.exe" e -y -spf Apache.7z > nul
+cd "%mainfolder%"
+echo  Done!
+ping -n 3 127.0.0.1>nul
 goto beginning
 
 :beginning_part2
@@ -62,9 +84,18 @@ ping -n 9 127.0.0.1>nul
 cd "%mainfolder%"
 goto select_expansion
 
+:website_start
+cd "%mainfolder%\Server\Tools\Apache24"
+start "" /min "apache_start.bat"
+goto menu
+
 :music_switch
 if exist "%mainfolder%\music.on" goto music_off
 if exist "%mainfolder%\music.off" goto music_on
+
+:website_switch
+if exist "%mainfolder%\website.on" goto website_off
+if exist "%mainfolder%\website.off" goto website_on
 
 :music_off
 taskkill /f /im cmdmp3win.exe
@@ -78,6 +109,18 @@ del "%mainfolder%\music.off"
 echo music > "%mainfolder%\music.on"
 goto beginning
 
+:website_off
+taskkill /f /im spp-httpd.exe
+cls
+del "%mainfolder%\website.on"
+echo music > "%mainfolder%\website.off"
+goto beginning
+
+:website_on
+del "%mainfolder%\website.off"
+echo music > "%mainfolder%\website.on"
+goto beginning
+
 :select_expansion
 mode con: cols=40 lines=30
 SET NAME=SPP - Classics Collection
@@ -85,6 +128,8 @@ TITLE %NAME%
 COLOR 0F
 if exist "%mainfolder%\music.on" set music=ON
 if exist "%mainfolder%\music.off" set music=OFF
+if exist "%mainfolder%\website.on" set website=ON
+if exist "%mainfolder%\website.off" set website=OFF
 set module_check_vanilla=Not Installed
 set module_check_tbc=Not Installed
 set module_check_wotlk=Not Available
@@ -117,6 +162,7 @@ echo.
 echo          [%module_check_wotlk%]
 REM echo 4 - World of Warcraft: Cataclysm               [%module_check_cata%]
 echo.
+echo   9 - Website [%website%]
 echo.
 echo   0 - Intro/Music [%music%]
 echo.
@@ -125,6 +171,7 @@ if "%choose_exp%"=="1" (goto setup_vanilla)
 if "%choose_exp%"=="2" (goto setup_tbc)
 if "%choose_exp%"=="3" (goto setup_wotlk)
 REM if "%choose_exp%"=="4" (goto setup_cata)
+if "%choose_exp%"=="9" (goto website_switch)
 if "%choose_exp%"=="0" (goto music_switch)
 if "%menu%"=="" (goto select_expansion)
 
@@ -231,6 +278,12 @@ IF NOT EXIST "%mainfolder%\autosave.on" (
   )
 )
 
+IF NOT EXIST "%mainfolder%\website.on" (
+  IF NOT EXIST "%mainfolder%\website.off" (
+    echo website > "%mainfolder%\website.on"
+  )
+)
+
 start "" /min "%mainfolder%\Server\Database\start.bat"
 if "%choose_exp%"=="1" (start "" /min "%mainfolder%\Server\Database_Playerbot\start.bat")
 if "%choose_exp%"=="2" (start "" /min "%mainfolder%\Server\Database_Playerbot\start.bat")
@@ -239,6 +292,10 @@ if "%choose_exp%"=="4" echo.
  
 if not exist "%mainfolder%\%spp_update%.spp" goto update_install
 if not exist "%mainfolder%\%world_update%.spp" goto update_world
+if exist "%mainfolder%\website.on" del "%mainfolder%\Server\website\vanilla.spp"
+if exist "%mainfolder%\website.on" del "%mainfolder%\Server\website\tbc.spp"
+if exist "%mainfolder%\website.on" echo %expansion% > "%mainfolder%\Server\website\%expansion%.spp"
+if exist "%mainfolder%\website.on" goto website_start
 goto menu
 
 :module_not_found
@@ -976,6 +1033,8 @@ tasklist /FI "IMAGENAME eq %worldserver%" 2>NUL | find /I /N "%worldserver%">NUL
 if "%ERRORLEVEL%"=="0" taskkill /f /im %worldserver%
 tasklist /FI "IMAGENAME eq cmdmp3win.exe" 2>NUL | find /I /N "cmdmp3win.exe">NUL
 if "%ERRORLEVEL%"=="0" taskkill /f /im cmdmp3win.exe
+tasklist /FI "IMAGENAME eq spp-httpd.exe" 2>NUL | find /I /N "spp-httpd.exe">NUL
+if "%ERRORLEVEL%"=="0" taskkill /f /im spp-httpd.exe
 cls
 if exist "%mainfolder%\autosave.on" goto autosave_shutdown
 "%mainfolder%\Server\Database\bin\mysqladmin.exe" -u root -p123456 --port=3310 shutdown
