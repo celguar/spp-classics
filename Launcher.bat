@@ -87,6 +87,7 @@ goto select_expansion
 :website_start
 cd "%mainfolder%\Server\Tools\Apache24"
 start "" /min "apache_start.bat"
+cd "%mainfolder%"
 goto menu
 
 :music_switch
