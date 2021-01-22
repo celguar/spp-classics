@@ -210,7 +210,7 @@ set realmserver=realmd.exe
 set worldserver=mangosd.exe
 
 set spp_update=tbc_base
-set world_update=tbc_world_up1
+set world_update=tbc_world_up2
 
 goto settings
 
